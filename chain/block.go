@@ -49,7 +49,7 @@ func CreateGensis(data []byte)Block  {
 	//todo 设置哈希，寻找并设置NONCE
 	//计算并设置哈希值
 	genesis.CalculateBlockHash()
-	//
+
 	proof := consensus.NewPoW(genesis)
 	genesis.Nonce =proof.FindNonce()
 	return genesis
