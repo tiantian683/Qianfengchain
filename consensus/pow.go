@@ -23,14 +23,16 @@ func (pow PoW)FindNonce() int64{
 	var nonce int64
 	nonce = 0
 	//for无限循环
+	hashBig := new(big.Int)
 	for {
 		hash := Calculate(pow.Block,nonce)
 		//2、拿到系统的目标值  难度
 		target := pow.Target
 		//3、比较大小
-		result := bytes.Compare(hash[:], target.Bytes())
+		hashBig = hashBig.SetBytes(hash[:])
+		result := hashBig.Cmp(target)
 		//4、判断结果
-		if result == 1 {
+		if result == -1 {
 			return nonce
 		}
 		nonce++
