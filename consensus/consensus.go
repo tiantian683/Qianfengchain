@@ -5,7 +5,7 @@ import (
 )
 
 type Consensus interface {
-	FindNonce()int64
+	FindNonce() ([32]byte ,int64)
 }
 
 //定义区块结构体的接口标准

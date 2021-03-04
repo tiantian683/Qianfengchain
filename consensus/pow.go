@@ -17,7 +17,7 @@ type PoW struct {
 }
 
 
-func (pow PoW)FindNonce() int64{
+func (pow PoW)FindNonce()([32]byte, int64){
 	fmt.Println("这里是共识机制pow")
 	//1、给定一个nonce值，计算区块的hash
 	var nonce int64
@@ -33,11 +33,10 @@ func (pow PoW)FindNonce() int64{
 		result := hashBig.Cmp(target)
 		//4、判断结果
 		if result == -1 {
-			return nonce
+			return hash,nonce
 		}
 		nonce++
 	}
-	return 0
 }
 //根据区块已有的信息和当前nonce的赋值，计算区块hash
 func Calculate(block BlockInterface,nonce int64)[32]byte  {

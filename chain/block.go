@@ -2,9 +2,6 @@ package chain
 
 import (
 	"XianfenChain04/consensus"
-	"XianfenChain04/utils"
-	"bytes"
-	"crypto/sha256"
 	"time"
 )
 
@@ -42,15 +39,15 @@ func (block Block)GetData() []byte  {
 }
 
 //计算哈希并赋值
-func (block *Block)CalculateBlockHash()  {
-	heightByte,_ := utils.Int2Byte(block.Height)
-	versionByte,_ := utils.Int2Byte(block.Version)
-	timeByte,_ := utils.Int2Byte(block.TimeStamp)
-	nonceByte,_:= utils.Int2Byte(block.Nonce)
-
-	blockByte :=  bytes.Join([][]byte{heightByte,versionByte,block.PrevHash[:],timeByte,nonceByte,block.Data},[]byte{})
-	block.Hash = sha256.Sum256(blockByte)
-}
+//func (block *Block)CalculateBlockHash()  {
+//	heightByte,_ := utils.Int2Byte(block.Height)
+//	versionByte,_ := utils.Int2Byte(block.Version)
+//	timeByte,_ := utils.Int2Byte(block.TimeStamp)
+//	nonceByte,_:= utils.Int2Byte(block.Nonce)
+//
+//	blockByte :=  bytes.Join([][]byte{heightByte,versionByte,block.PrevHash[:],timeByte,nonceByte,block.Data},[]byte{})
+//	block.Hash = sha256.Sum256(blockByte)
+//}
 
 /*
 生成创世区块的函数
@@ -63,12 +60,11 @@ func CreateGensis(data []byte)Block  {
 		TimeStamp: time.Now().Unix(),
 		Data:      data,
 	}
-	//todo 设置哈希，寻找并设置NONCE
-	//计算并设置哈希值
-	genesis.CalculateBlockHash()
-
+	//调用pow实现hash计算并寻找nonce
 	proof := consensus.NewPoW(genesis)
-	genesis.Nonce =proof.FindNonce()
+	hash,nonce :=proof.FindNonce()
+	genesis.Hash=hash
+	genesis.Nonce=nonce
 	return genesis
 }
 
@@ -83,10 +79,10 @@ func NewBlock(height int64,Prev [32]byte,data []byte) Block {
 		TimeStamp: time.Now().Unix(),
 		Data:      data,
 	}
-	 //todo  设置哈希、寻找并设置nonce
-	 //设置区块hash
-	 newBlock.CalculateBlockHash()
+	//调用pow实现hash计算并寻找nonce
 	proof := consensus.NewPoW(newBlock)
-	newBlock.Nonce =proof.FindNonce()
+	hash,nonce :=proof.FindNonce()
+	newBlock.Hash =hash
+	newBlock.Nonce=nonce
 	return newBlock
 }
