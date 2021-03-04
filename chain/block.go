@@ -1,8 +1,8 @@
 package chain
 
 import (
-	"XianfenChain04/chain/utils"
 	"XianfenChain04/consensus"
+	"XianfenChain04/utils"
 	"bytes"
 	"crypto/sha256"
 	"time"
@@ -24,12 +24,29 @@ type Block struct {
 	//区块体
 	Data []byte
 }
+
+func (block Block)GetHeight() int64  {
+	return block.Height
+}
+func (block Block)GetVersion() int64  {
+	return block.Version
+}
+func (block Block)GetTimeStamp() int64  {
+	return block.TimeStamp
+}
+func (block Block)GetPrevHash() [32]byte  {
+	return block.PrevHash
+}
+func (block Block)GetData() []byte  {
+	return block.Data
+}
+
 //计算哈希并赋值
 func (block *Block)CalculateBlockHash()  {
 	heightByte,_ := utils.Int2Byte(block.Height)
-	versionByte,_ :=utils.Int2Byte(block.Version)
+	versionByte,_ := utils.Int2Byte(block.Version)
 	timeByte,_ := utils.Int2Byte(block.TimeStamp)
-	nonceByte,_:=utils.Int2Byte(block.Nonce)
+	nonceByte,_:= utils.Int2Byte(block.Nonce)
 
 	blockByte :=  bytes.Join([][]byte{heightByte,versionByte,block.PrevHash[:],timeByte,nonceByte,block.Data},[]byte{})
 	block.Hash = sha256.Sum256(blockByte)

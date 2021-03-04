@@ -1,18 +1,18 @@
 package consensus
 
 import (
-	"XianfenChain04/chain"
-	"XianfenChain04/chain/utils"
+	"XianfenChain04/utils"
 	"bytes"
 	"crypto/sha256"
 	"fmt"
 	"math/big"
 )
-
+//目的：拿到区块的属性数据(属性值 )
+    //1、通过结构体引用，引用block
 const DIFFICULTY  = 10 //难度值系数
 
 type PoW struct {
-	Block chain.Block
+	Block BlockInterface
 	Target *big.Int
 }
 
@@ -38,12 +38,17 @@ func (pow PoW)FindNonce() int64{
 	return 0
 }
 //根据区块已有的信息和当前nonce的赋值，计算区块hash
-func Calculate(block chain.Block,nonce int64)[32]byte  {
-	heightByte, _ := utils.Int2Byte(block.Height)
-	versionByte, _ := utils.Int2Byte(block.Version)
-	timeByte, _ := utils.Int2Byte(block.TimeStamp)
+func Calculate(block BlockInterface,nonce int64)[32]byte  {
+	heightByte, _ := utils.Int2Byte(block.GetHeight())
+	versionByte, _ := utils.Int2Byte(block.GetTimeStamp())
+	timeByte, _ := utils.Int2Byte(block.GetTimeStamp())
 	nonceByte, _ := utils.Int2Byte(nonce)
-	blockByte := bytes.Join([][]byte{heightByte, versionByte, block.PrevHash[:], timeByte, nonceByte, block.Data}, []byte{})
+	perv := block.GetPrevHash()
+	blockByte := bytes.Join([][]byte{heightByte,
+		versionByte, perv[:],
+		timeByte, nonceByte,
+		block.GetData()},
+		[]byte{})
 	//计算区块的hash
 	hash := sha256.Sum256(blockByte)
 	return hash
