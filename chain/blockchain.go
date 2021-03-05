@@ -17,5 +17,4 @@ func (chain *BlockChain)CreateNewBlcok(data []byte)  {
 	lastBlock := blocks[len(blocks)-1]//最后最新的区块
 	newBlock := NewBlock(lastBlock.Height,lastBlock.Hash,lastBlock.Data)
 	chain.Blocks = append(chain.Blocks,newBlock)
-
 }

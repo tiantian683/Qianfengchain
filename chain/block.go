@@ -2,6 +2,8 @@ package chain
 
 import (
 	"XianfenChain04/consensus"
+	"bytes"
+	"encoding/gob"
 	"time"
 )
 
@@ -48,6 +50,23 @@ func (block Block)GetData() []byte  {
 //	blockByte :=  bytes.Join([][]byte{heightByte,versionByte,block.PrevHash[:],timeByte,nonceByte,block.Data},[]byte{})
 //	block.Hash = sha256.Sum256(blockByte)
 //}
+
+//区块的序列化方法
+func (block *Block)Serialize()([]byte,error){
+	//缓冲区
+	buff := new(bytes.Buffer)//new是实例化一个指针，开辟一个内存空间
+	encoder := gob.NewEncoder(buff)
+	err := encoder.Encode(&block)
+	return  buff.Bytes(),err
+}
+//区块的反序列化函数
+//函数与方法的区别在于函数名前有无(block *Block)此类
+func DeSerialize(data []byte)(Block,error)  {
+	var block Block
+	decoder := gob.NewDecoder(bytes.NewReader(data))
+	err := decoder.Decode(block)
+	return block,err
+}
 
 /*
 生成创世区块的函数
