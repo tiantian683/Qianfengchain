@@ -60,11 +60,11 @@ func (block *Block)Serialize()([]byte,error){
 	return  buff.Bytes(),err
 }
 //区块的反序列化函数
-//函数与方法的区别在于函数名前有无(block *Block)此类
+//函数与方法的区别在于函数名前有无(block *Block)诸如此类
 func DeSerialize(data []byte)(Block,error)  {
 	var block Block
 	decoder := gob.NewDecoder(bytes.NewReader(data))
-	err := decoder.Decode(block)
+	err := decoder.Decode(&block)
 	return block,err
 }
 
