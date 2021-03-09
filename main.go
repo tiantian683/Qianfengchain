@@ -30,7 +30,7 @@ func main() {
 	}
 
 	//测试
-	lastBlock,err := blockChian.GetLastBlock()
+	lastBlock := blockChian.GetLastBlock()
 	if err!=nil {
 		fmt.Println(err)
 		return
